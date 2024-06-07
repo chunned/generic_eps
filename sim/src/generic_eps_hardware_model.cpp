@@ -6,6 +6,29 @@ namespace Nos3
 
     extern ItcLogger::Logger *sim_logger;
 
+    bool Generic_epsHardwareModel::isFileEmpty(const std::string& filename) const {
+            /* Check if a given file is empty */
+            std::ifstream file(filename);
+            return file.peek() == std::ifstream::traits_type::eof();
+        }
+    
+    void Generic_epsHardwareModel::writeToLogFile() {
+        /* Write debug log to file */
+        std::ofstream LogFile;
+        LogFile.open("/home/jstar/Desktop/github-nos3/sims/build/eps_log.csv", std::ios_base::app);
+        /* Check if file is empty; write headers if it is */
+        if (isFileEmpty("/home/jstar/Desktop/github-nos3/sims/build/eps_log.csv")) {
+            LogFile << "WattHrs,Voltage\n";
+        } else {
+            /* Write data */
+            LogFile << _bus[0]._battery_watthrs;
+            LogFile << ",";
+            LogFile << _bus[0]._voltage;
+            LogFile << '\n';
+        }
+        LogFile.close();
+    }
+
     Generic_epsHardwareModel::Generic_epsHardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config), 
     _enabled(GENERIC_EPS_SIM_SUCCESS), _initialized_other_sims(GENERIC_EPS_SIM_ERROR)
     {
@@ -532,7 +555,7 @@ namespace Nos3
 //        printf("Total power used is %f\n", p_out);
         printf("Battery Watt Hours are now %f\n", _bus[0]._battery_watthrs);
         printf("Battery Voltage is now %i\n", _bus[0]._voltage);
-        
+        writeToLogFile();
     }
 
     I2CSlaveConnection::I2CSlaveConnection(Generic_epsHardwareModel* hm,
