@@ -18,6 +18,7 @@
 #include <sim_i_hardware_model.hpp>
 
 #include <string>
+#include <fstream>
 
 
 /*
