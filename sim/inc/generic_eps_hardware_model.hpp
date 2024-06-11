@@ -49,6 +49,10 @@ namespace Nos3
         void create_generic_eps_data(std::vector<uint8_t>& out_data); 
         void update_battery_values(void);
 
+        /* Edge Impulse CSV logging methods */
+        bool isFileEmpty(const std::string& filename) const;
+        void writeToLogFile();
+
         /* Private data members */
         class I2CSlaveConnection*                           _i2c_slave_connection;
         
